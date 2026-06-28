@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+
+node_modules/
+dist/
+
+delta/
+
+unused_files_backup.zip
