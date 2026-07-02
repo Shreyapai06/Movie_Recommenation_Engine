@@ -2,7 +2,7 @@
 
 A full-stack movie recommender: real TMDB data flows through a small data
 pipeline, gets turned into a content-based similarity model, and is served
-up through a FastAPI backend and a React frontend you can actually click
+up through a FastAPI backend and an Angular frontend you can actually click
 around in.
 
 If you just want to see it: scroll to the screenshots. If you want to run
@@ -19,6 +19,10 @@ the similarity model.
 
 ![Movie detail page](docs/screenshots/movie-detail.png)
 
+**Live search** — navbar search with a debounced dropdown as you type (RxJS `debounceTime` + `switchMap`).
+
+![Search dropdown](docs/screenshots/search-dropdown.png)
+
 **Recommendations by genre/keyword** — not just "movies like this movie",
 you can also just type a vibe ("Comedy", "heist", "time travel") and get a
 list back.
@@ -33,7 +37,7 @@ This is being built incrementally, so here's the honest status:
 - [x] Data cleaning/flattening into a queryable table
 - [x] TF-IDF + cosine similarity model for "similar movies"
 - [x] FastAPI backend with movie + recommendation endpoints
-- [x] React frontend — landing grid, movie detail page, live search, genre/keyword recommendations
+- [x] Angular frontend — landing grid, movie detail page, live search, genre/keyword recommendations (RxJS throughout)
 - [x] Verified end-to-end in a real browser (caught and fixed a duplicate-data bug and a dev-server routing bug doing this)
 - [ ] Pagination on the movie grid (currently loads all ~99 movies at once — fine for now, won't scale forever)
 - [ ] Dockerfile is stale — still points at an old Flask entrypoint from before the FastAPI rewrite, needs updating
@@ -59,11 +63,11 @@ TMDB API → ingest → bronze → transform → silver → similarity model →
 - `routers/recommendations.py` — get recommendations by movie id, by title, or by a free-text genre/keyword query
 - `services/delta_reader.py` + `services/recommender.py` — the actual pandas logic behind those routes
 
-**The frontend** (`frontend/`) — a small React + Vite SPA:
-- `Landing` page — the movie grid
-- `MovieDetail` page — one movie's full info + recommended titles
-- `Recommendations` page — the genre/keyword search
-- `Navbar` — sitewide search with a live dropdown
+**The frontend** (`frontend-ng/`) — an Angular SPA with RxJS for async data flow:
+- `LandingComponent` — the movie grid, fetches all movies on init
+- `MovieDetailComponent` — one movie's full info + recommended titles (two chained HTTP requests via `switchMap`)
+- `RecommendationsComponent` — the genre/keyword search, requests are cancellable via `Subject` + `switchMap`
+- `NavbarComponent` — sitewide search with a live dropdown using `debounceTime` + `distinctUntilChanged`
 
 No magic anywhere — it's intentionally simple so each layer is easy to reason about.
 
@@ -79,7 +83,7 @@ echo "TMDB_API_KEY=your_key_here" > .env
 pip install -r requirements.txt
 
 # 3. frontend deps
-cd frontend && npm install && cd ..
+cd frontend-ng && npm install && cd ..
 
 # 4. build the data (run once, or whenever you want fresh TMDB data)
 python jobs/ingest_tmdb.py
@@ -87,12 +91,13 @@ python jobs/transform_movies.py
 python jobs/build_similarity.py
 
 # 5. run it
-uvicorn app.main:app --reload --port 8000   # backend  -> http://localhost:8000
-cd frontend && npm run dev                  # frontend -> http://localhost:5173
+uvicorn app.main:app --reload --port 8000         # backend  -> http://localhost:8000
+cd frontend-ng && npx ng serve --port 4200        # frontend -> http://localhost:4200
 ```
 
-The Vite dev server proxies `/movies/*` and `/recommend/*` to the backend,
-so the frontend just calls relative paths — no CORS headaches in dev.
+The Angular dev server proxies `/movies/` and `/recommend/` to the backend
+via `proxy.conf.json`, so the frontend just calls relative paths — no CORS
+headaches in dev.
 
 ## API endpoints
 
@@ -110,4 +115,4 @@ Full interactive docs at `/docs` once the backend is running.
 ## Stack
 
 Python, FastAPI, pandas, Delta Lake, scikit-learn (TF-IDF + cosine similarity) on the backend.
-React, Vite, React Router on the frontend.
+Angular 21, RxJS, Angular Router on the frontend.

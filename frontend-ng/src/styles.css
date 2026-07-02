@@ -1,0 +1,82 @@
+:root {
+  --bg: #0e0f13;
+  --bg-elevated: #181a21;
+  --text: #e4e4e7;
+  --text-muted: #9ca3af;
+  --accent: #e63946;
+  --border: #2a2c35;
+
+  font: 16px/1.5 system-ui, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2 {
+  font-weight: 600;
+  color: var(--text);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.page {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.page-title {
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+
+.page-subtitle {
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.status-message {
+  padding: 64px 32px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.status-message.error {
+  color: var(--accent);
+}
+
+.movie-card-poster-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 8px;
+}

@@ -1,0 +1,15 @@
+<div class="page">
+  <h1 class="page-title">Popular Movies</h1>
+
+  @if (loading) {
+    <div class="status-message">Loading movies...</div>
+  } @else if (error) {
+    <div class="status-message error">Failed to load movies: {{ error }}</div>
+  } @else {
+    <div class="movie-grid">
+      @for (movie of movies; track movie.movie_id) {
+        <app-movie-card [movie]="movie" />
+      }
+    </div>
+  }
+</div>

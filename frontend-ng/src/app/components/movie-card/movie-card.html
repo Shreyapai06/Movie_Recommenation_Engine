@@ -1,0 +1,10 @@
+<a [routerLink]="['/movie', movieId]" class="movie-card">
+  <div class="movie-card-poster">
+    @if (posterUrl) {
+      <img [src]="posterUrl" [alt]="movie.title" loading="lazy" />
+    } @else {
+      <div class="movie-card-poster-fallback">No Image</div>
+    }
+  </div>
+  <div class="movie-card-title">{{ movie.title }}</div>
+</a>

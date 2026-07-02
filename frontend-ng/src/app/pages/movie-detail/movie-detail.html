@@ -1,0 +1,58 @@
+<div class="page">
+  @if (loading) {
+    <div class="status-message">Loading movie...</div>
+  } @else if (notFound) {
+    <div class="status-message error">Movie not found.</div>
+  } @else if (movie) {
+    <div class="movie-detail">
+      <div class="movie-detail-poster">
+        @if (posterUrl(movie.poster_path); as url) {
+          <img [src]="url" [alt]="movie.title" />
+        } @else {
+          <div class="movie-card-poster-fallback">No Image</div>
+        }
+      </div>
+
+      <div class="movie-detail-info">
+        <h1>{{ movie.title }}</h1>
+        <p class="movie-detail-overview">{{ movie.overview }}</p>
+
+        <dl class="movie-detail-meta">
+          <dt>Genres</dt>
+          <dd>{{ movie.genres || '—' }}</dd>
+
+          <dt>Director</dt>
+          <dd>{{ movie.director || '—' }}</dd>
+
+          <dt>Cast</dt>
+          <dd>{{ movie.cast || '—' }}</dd>
+
+          <dt>Release Date</dt>
+          <dd>{{ movie.release_date || '—' }}</dd>
+
+          <dt>Rating</dt>
+          <dd>{{ movie.vote_average }} ({{ movie.vote_count }} votes)</dd>
+
+          <dt>Popularity</dt>
+          <dd>{{ movie.popularity }}</dd>
+
+          @if (movie.keywords) {
+            <dt>Keywords</dt>
+            <dd>{{ movie.keywords }}</dd>
+          }
+        </dl>
+      </div>
+    </div>
+
+    @if (recommendations.length > 0) {
+      <section class="recommendations-section">
+        <h2>You might also like</h2>
+        <div class="movie-grid">
+          @for (rec of recommendations; track rec.recommended_movie_id) {
+            <app-movie-card [movie]="rec" idKey="recommended_movie_id" />
+          }
+        </div>
+      </section>
+    }
+  }
+</div>

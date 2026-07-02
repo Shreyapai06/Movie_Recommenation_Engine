@@ -1,0 +1,29 @@
+<header class="navbar">
+  <a routerLink="/" class="navbar-brand">🎬 MovieRec</a>
+
+  <div class="navbar-search">
+    <input
+      type="text"
+      placeholder="Search movies..."
+      [value]="query"
+      (input)="onQueryChange($any($event.target).value)"
+      (blur)="closeDropdown()"
+    />
+
+    @if (open && results.length > 0) {
+      <ul class="navbar-search-results">
+        @for (movie of results; track movie.movie_id) {
+          <li (mousedown)="goToMovie(movie.movie_id)">{{ movie.title }}</li>
+        }
+      </ul>
+    }
+
+    @if (open && query.trim() && results.length === 0) {
+      <ul class="navbar-search-results">
+        <li class="navbar-search-empty">No movies found</li>
+      </ul>
+    }
+  </div>
+
+  <a routerLink="/recommendations" class="navbar-recommend-btn">Recommendations</a>
+</header>

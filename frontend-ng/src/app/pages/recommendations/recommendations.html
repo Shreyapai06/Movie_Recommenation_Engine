@@ -1,0 +1,28 @@
+<div class="page">
+  <h1 class="page-title">Find Recommendations</h1>
+  <p class="page-subtitle">
+    Search by a movie title, genre, or keyword to get movie recommendations.
+  </p>
+
+  <form class="recommend-search-form" (ngSubmit)="submit()">
+    <input
+      type="text"
+      placeholder="e.g. The Dark Knight, Comedy, time travel..."
+      [(ngModel)]="query"
+      name="query"
+    />
+    <button type="submit">Recommend</button>
+  </form>
+
+  @if (loading) {
+    <div class="status-message">Searching...</div>
+  } @else if (searched && results.length === 0) {
+    <div class="status-message">No recommendations found for "{{ query }}".</div>
+  } @else if (results.length > 0) {
+    <div class="movie-grid">
+      @for (rec of results; track rec.recommended_movie_id) {
+        <app-movie-card [movie]="rec" idKey="recommended_movie_id" />
+      }
+    </div>
+  }
+</div>
