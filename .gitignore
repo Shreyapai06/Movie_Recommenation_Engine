@@ -5,6 +5,5 @@ __pycache__/
 node_modules/
 dist/
 
-delta/
 
 unused_files_backup.zip
