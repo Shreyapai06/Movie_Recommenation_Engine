@@ -1,0 +1,20 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd frontend-ng
+        - npm ci
+        # Inject the FastAPI backend URL from Amplify environment variable
+        - |
+          sed -i "s|YOUR_FASTAPI_URL|${API_BASE_URL}|g" src/environments/environment.prod.ts
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: frontend-ng/dist/frontend-ng/browser
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - frontend-ng/node_modules/**/*
