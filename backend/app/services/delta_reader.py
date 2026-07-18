@@ -1,4 +1,4 @@
-from deltalake import DeltaTable
+import glob
 import pandas as pd
 
 SILVER_MOVIES_PATH = "delta/silver/movies"
@@ -6,8 +6,8 @@ GOLD_SIMILARITY_PATH = "delta/gold/movie_similarity"
 
 
 def read_delta(path: str) -> pd.DataFrame:
-    table = DeltaTable(path)
-    return table.to_pandas()
+    files = sorted(glob.glob(f"{path}/*.parquet"))
+    return pd.concat([pd.read_parquet(f) for f in files], ignore_index=True)
 
 
 def read_silver_movies() -> pd.DataFrame:

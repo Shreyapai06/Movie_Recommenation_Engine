@@ -16,6 +16,8 @@ def search_movies(query: str = Query(...)):
 
     results = df[
         df["title"].str.contains(query, case=False, na=False)
+        | df["genres"].str.contains(query, case=False, na=False)
+        | df["keywords"].str.contains(query, case=False, na=False)
     ]
 
     return results.head(10).to_dict(orient="records")
